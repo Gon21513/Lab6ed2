@@ -30,7 +30,7 @@ void mostrarMenu() {
 
 // Función que se ejecuta una vez al inicio del programa
 void setup() {
-  Serial.begin(9600); // Inicializar la comunicación serial a una velocidad de 9600 baudios
+  Serial.begin(115200); // Inicializar la comunicación serial a una velocidad de 9600 baudios
   mostrarMenu(); // Muestra el menú al usuario por primera vez
   SPI.setModule(0); //Utilizar el SPI Module 0
 
