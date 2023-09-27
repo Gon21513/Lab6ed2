@@ -9,6 +9,7 @@
 int opcionUsuario; // Variable que almacena la opción elegida por el usuario
 char entradaSerial; // Variable que almacena el carácter leído desde el puerto serial
 int imagen; //bandera para cheuqear la imagen que se selecciono 
+String newimagen;
 
 File myFile; //Se define myFile como tipo archivo
 
@@ -19,6 +20,10 @@ void mostrarMenu() {
     Serial.println("Seleccione 1 para Imagen 1"); 
     Serial.println("Seleccione 2 para Imagen 2");
     Serial.println("Seleccione 3 para Imagen 3");
+    Serial.println("Seleccione 4 para Imagen Creada");
+
+    Serial.println("Seleccione 5 para crear Imagen");
+
     // Solicita al usuario que introduzca su elección.
     Serial.print("Introduce tu elección: ");
 }
@@ -63,6 +68,19 @@ void loop() {
     Serial.println("Has seleccionado la Imagen 3.");
     imagen = 3; //bandera de la imagen 3
   }
+
+  else if (entradaSerial == '4'){ 
+    Serial.println(); // Agregar un salto de línea
+    Serial.println("Has seleccionado la Imagen Creada.");
+    imagen = 4; //bandera de la imagen 3
+  }
+  
+else if (entradaSerial == '5'){ 
+    Serial.println(); // Agregar un salto de línea
+    Serial.println("Has seleccionado la Imagen Creada.");
+    imagen = 5; //bandera de la imagen 5
+}
+
 // Si el usuario introduce una opción no válida.
   else {
     Serial.println(); // Agregar un salto de línea
@@ -161,10 +179,61 @@ void imagenes(){
 
   }
 
-  
-  imagen = 0; // se reinicia la bandera de imagen 
-  
+  //////////////////////////////////////////imagen 3//////////////////////////////////////////////////
+  if (imagen == 4){// si la imagen que se selcciona es 1
+    myFile = SD.open("IMAGEN4.txt"); // abrir el archivo con el nombre 
+   
+    if (myFile)
+    {
+        Serial.println("IMAGEN4.txt:");
+
+        // leer el archivo hasta que no se enceuntre nada mas 
+        while (myFile.available())//leer el archivo complto 
+        {
+            Serial.write(myFile.read());// mostarr que se esta leyendo 
+        }
+        //cerrar el archivo 
+        myFile.close();
+      Serial.println('\n'); //salto de linea 
+
+    }
+    else
+    {
+        // si el archivo no logro abrirse se muestra el mensaje siguiente
+        Serial.println("Error al abrir imagen.txt");
+    }
+
   }
 
+///////////////////////////////crear imagen////////////////////////////////
+// Si el usuario seleccionó la opción 5 del menú
+    if (imagen == 5) {
 
-  
+    myFile = SD.open("imagen4.txt", FILE_WRITE); // Abrir el archivo en modo escritura
+    if (myFile) { //Si sí hay un archivo llamado así ejecutar
+        Serial.println("Dibuje la imagen a crear...");
+        Serial.println("Presione 7 para salir al haber terminado.");
+        char c;
+        while (true) {
+            if (Serial.available()) {
+                c = Serial.read(); //Leer un carácter del puerto serie
+                if (c == '7') {
+                    break; //Salir del bucle si el carácter es '7'
+                }
+                newimagen += c; //Agregar el carácter a la cadena newimagen
+            }
+        }
+        myFile.println(newimagen);
+        // close the file:
+        myFile.close(); //Cerrar el archivo
+        Serial.println("Contenido guardado en IMAGEN4.txt.");
+        Serial.print('\n'); //Imprimir un enter
+    } else {
+        // if the file didn't open, print an error:
+        Serial.println("error opening image.txt"); //Si no hay archivo con ese nombre, hay error
+    }
+/// Escribir en la imagen 
+    }
+
+    imagen = 0;
+}
